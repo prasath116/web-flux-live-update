@@ -14,12 +14,21 @@ import reactor.core.publisher.Flux;
 @RestController
 public class MarketDataController {
 	@Autowired
-	@Qualifier("marketData")
-	private Flux<MarketData> data;
+	@Qualifier("marketLiveData")
+	private Flux<MarketData> marketLiveData;
+	
+	@Autowired
+	@Qualifier("marketAllData")
+	private Flux<MarketData> marketAllData;
 
-	@GetMapping(value = "/getData", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@GetMapping(value = "/getLiveData", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public Flux<MarketData> getData() {
-		return data;
+		return marketLiveData;
+	}
+	
+	@GetMapping(value = "/getAllData", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<MarketData> getAllData() {
+		return marketAllData;
 	}
 	
 	@GetMapping(path = "/stream-flux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

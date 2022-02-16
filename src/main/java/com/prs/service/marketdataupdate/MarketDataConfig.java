@@ -11,14 +11,27 @@ import reactor.core.publisher.Sinks;
 public class MarketDataConfig {
 
 	@Bean
-    public Sinks.Many<MarketData> sink(){
-        return Sinks.many().replay().latest();
-    }
+	@Qualifier("sinkLive")
+	public Sinks.Many<MarketData> sinkLive() {
+		return Sinks.many().replay().latest();
+	}
 
-    @Bean
-    @Qualifier("marketData")
-    public Flux<MarketData> marketData(Sinks.Many<MarketData> sink){
-        return sink.asFlux();
-    }
-    
+	@Bean
+	@Qualifier("sinkAll")
+	public Sinks.Many<MarketData> sinkAll() {
+		return Sinks.many().replay().all();
+	}
+
+	@Bean
+	@Qualifier("marketLiveData")
+	public Flux<MarketData> marketLiveData(Sinks.Many<MarketData> sinkLive) {
+		return sinkLive.asFlux();
+	}
+
+	@Bean
+	@Qualifier("marketAllData")
+	public Flux<MarketData> marketAllData(Sinks.Many<MarketData> sinkAll) {
+		return sinkAll.asFlux();
+	}
+
 }
